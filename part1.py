@@ -1,6 +1,7 @@
 import sys
 import os
 import re
+from operator import itemgetter
 
 ###################################################################################
 # Open the csv file of senders and receivers and return their corresponding lists #
@@ -53,25 +54,27 @@ def fill_dict(senders, receivers, dict):
                     num_messages = len(receivers[rnd])
                     ro = find_offset(receiver)
                     if (ro != so):
-                        rnd_list[ro] = (receiver, 1/(num_messages*1.0))
+                        rnd_list[ro] = (receiver, (1/(num_messages*1.0))/100)
                 if sender in dict.keys():
-                    value = dict.get(sender)
-                    value.append((rnd, rnd_list))
+                    list = dict.get(sender)
+                    for item in range(0, len(rnd_list)):
+                        rec = rnd_list[item][0]
+                        if (rec == None):
+                            rec = list[item][0]
+                        value = list[item][1]
+                        ave_value = (value + rnd_list[item][1])
+                        list[item] = (rec, ave_value)
                 else:
-                    dict[sender] = [(rnd, rnd_list)]
+                    dict[sender] = rnd_list
     return dict
-
-# def arith_mean(dict):
-#     for key, value in dict.items():
-#         for item in value:
 
 ########################
 # Print out users, yo. #
 ########################
 def print_dict(dict):
     for key, value in dict.items():
-        for item in value:
-            print "{0} --> {1}".format(key,  item)
+        friends = sorted(set(value), key=itemgetter(1))
+        print "{0} --> {1}".format(key, friends[-2:])
         print ""
 
 
