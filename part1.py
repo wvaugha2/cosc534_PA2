@@ -68,6 +68,7 @@ def print_dict(dict):
     for key, value in dict.items():
         for item in value:
             print "{0} --> {1}".format(key,  item)
+        print ""
 
 
 if __name__ == "__main__":
