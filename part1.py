@@ -48,18 +48,22 @@ def fill_dict(senders, receivers, dict):
         for sender in senders[rnd]:
             if (senderCheck(sender)):
                 so = find_offset(sender)
-                rnd_list = [0]*260
+                rnd_list = [(None, 0)]*260
                 for receiver in receivers[rnd]:
                     num_messages = len(receivers[rnd])
                     ro = find_offset(receiver)
                     if (ro != so):
-                        rnd_list[ro] = 1/(num_messages*1.0)
+                        rnd_list[ro] = (receiver, 1/(num_messages*1.0))
                 if sender in dict.keys():
                     value = dict.get(sender)
                     value.append((rnd, rnd_list))
                 else:
                     dict[sender] = [(rnd, rnd_list)]
     return dict
+
+# def arith_mean(dict):
+#     for key, value in dict.items():
+#         for item in value:
 
 ########################
 # Print out users, yo. #
@@ -76,6 +80,7 @@ if __name__ == "__main__":
     # Get the senders and receivers... booyah!!!
     senders, receivers = openFile(sys.argv[1])
     users = fill_dict(senders, receivers, users)
+    #users = arith_mean(users)
     print_dict(users)
     # Print out dem bad boys
     #for s, r in zip(senders, receivers):
