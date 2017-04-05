@@ -4,8 +4,8 @@ import sys
 import os
 import re
 
-def senderCheck(name):
-    if (name[1] == '0'):
+def senderCheck(user):
+    if (user[1] == '0'):
         return True
     else:
         return False
@@ -27,23 +27,28 @@ def openFile(fname):
                 receivers.append(input)
     return senders, receivers
 
+def find_offset(user):
+    index_i = ord(user[0]) - 97
+    index_j = int(user[1])
+    offset = (index_i*10) + index_j
+    return offset
+
 def fill_dict(senders, receivers, dict):
     for rnd in range(0, len(senders)):
         for sender in senders[rnd]:
             if (senderCheck(sender)):
-                key = sender
+                so = find_offset(sender)
                 rnd_list = [0]*260
                 for receiver in receivers[rnd]:
                     num_messages = len(receivers[rnd])
-                    index_i = ord(receiver[0]) - 97
-                    index_j = int(receiver[1])
-                    offset = (index_i*10) + index_j
-                    rnd_list[offset] = 1/(num_messages*1.0)
-                if key in dict.keys():
-                    value = dict.get(key)
+                    ro = find_offset(receiver)
+                    if (ro != so):
+                        rnd_list[ro] = 1/(num_messages*1.0)
+                if sender in dict.keys():
+                    value = dict.get(sender)
                     value.append((rnd, rnd_list))
                 else:
-                    dict[key] = [(rnd, rnd_list)]
+                    dict[sender] = [(rnd, rnd_list)]
     return dict
 
 def print_dict(dict):
