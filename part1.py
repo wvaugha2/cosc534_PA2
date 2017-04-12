@@ -49,12 +49,16 @@ def fill_dict(senders, receivers, dict):
         for sender in senders[rnd]:
             if (senderCheck(sender)):
                 so = find_offset(sender)
-                rnd_list = [(None, 0)]*260
+                rnd_list = [0]*260
                 for receiver in receivers[rnd]:
                     num_messages = len(receivers[rnd])
                     ro = find_offset(receiver)
                     if (ro != so):
+<<<<<<< HEAD
                         rnd_list[ro] = (receiver, (1/(num_messages*1.0))/100)
+=======
+                        rnd_list[ro] = 1/(num_messages*1.0)
+>>>>>>> parent of dc189fa... Also mapped is the recipient name, alongside its probability
                 if sender in dict.keys():
                     list = dict.get(sender)
                     for item in range(0, len(rnd_list)):
@@ -83,7 +87,6 @@ if __name__ == "__main__":
     # Get the senders and receivers... booyah!!!
     senders, receivers = openFile(sys.argv[1])
     users = fill_dict(senders, receivers, users)
-    #users = arith_mean(users)
     print_dict(users)
     # Print out dem bad boys
     #for s, r in zip(senders, receivers):
