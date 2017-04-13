@@ -37,6 +37,7 @@ if __name__ == "__main__":
     target = ['a0','b0','c0','d0','e0','f0','g0','h0','i0','j0','k0','l0','m0','n0','o0','p0','q0','r0',
               's0','t0','u0','v0','w0','x0','y0','z0']
     
+    # Two lists indexed as: [target][round][recipient]
     o_list = [[]]*26    # list representing o_i values (sender did send a message)
     u_list = [[]]*26    # list representing u_i values (sender didn't send a message)
     for i in range(26):
@@ -107,8 +108,7 @@ if __name__ == "__main__":
             if(f_vector[j] < f_vector[max1_index] and
                f_vector[j] > f_vector[max2_index]):
                 max2_index = j
-            elif(f_vector[j] > f_vector[max1_index] and
-                 f_vector[j] > f_vector[max2_index]):
+            elif(f_vector[j] > f_vector[max1_index]):
                 max2_index = max1_index
                 max1_index = j
 
@@ -121,10 +121,9 @@ if __name__ == "__main__":
         r2 = chr(char_val) + str(int_val)
 
         print(target[i])
-
         print(r1, f_vector[max1_index], max1_index)
         print(r2, f_vector[max2_index], max2_index)
-        print('\n')
+        print('')
 
 #print(o_list[0][0])
 #v_list = [[]]*26
