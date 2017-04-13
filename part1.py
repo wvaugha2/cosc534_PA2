@@ -20,16 +20,6 @@ def openFile(fname):
                 receivers.append(input)
     return senders, receivers
 
-#######################################################################
-# Check to make sure sender is only the 0th sender for its associated #
-# letter --> (ex: a0, b0, c0, d0, etc..)                              #
-#######################################################################
-def senderCheck(user):
-    if (user[1] == '0'):
-        return True
-    else:
-        return False
-
 #############################################################
 # Return recipient location in users list for current round #
 #############################################################
@@ -37,6 +27,7 @@ def find_offset(user):
     index_i = ord(user[0]) - 97
     index_j = int(user[1])
     offset = (index_i*10) + index_j
+
     return offset
 
 ###########################################################################
@@ -46,49 +37,96 @@ def find_offset(user):
 ###########################################################################
 def fill_dict(senders, receivers, dict):
     for rnd in range(0, len(senders)):
+        targets = ['a0', 'b0', 'c0', 'd0', 'e0', 'f0', 'g0', 'h0', 'i0', 'j0', 'k0', 'l0', 'm0',
+                           'n0', 'o0', 'p0', 'q0', 'r0', 's0', 't0', 'u0', 'v0', 'w0', 'x0', 'y0', 'z0']
+        rnd_list = [(None, 0)]*260
+        for receiver in receivers[rnd]:
+            num_messages = len(receivers[rnd])
+            # Calculate list offset for sender
+            ro = find_offset(receiver)
+            # Don't include 1/32 probability if recipient is also sender
+            #if (ro != so):
+            rnd_list[ro] = (receiver, (1/(num_messages*1.0)))
+        # Traverse list of senders for the current orund
         for sender in senders[rnd]:
-            if (senderCheck(sender)):
-                so = find_offset(sender)
-                rnd_list = [0]*260
-                for receiver in receivers[rnd]:
-                    num_messages = len(receivers[rnd])
-                    ro = find_offset(receiver)
-                    if (ro != so):
-<<<<<<< HEAD
-                        rnd_list[ro] = (receiver, (1/(num_messages*1.0))/100)
-=======
-                        rnd_list[ro] = 1/(num_messages*1.0)
->>>>>>> parent of dc189fa... Also mapped is the recipient name, alongside its probability
+            # Check that it is a valid sender
+            if sender in targets:
+                # Pop off sender if it sent for current round
+                targets.pop(targets.index(sender))
+                # If sender already in dictionary, simply append the current round list to its o_lists key
                 if sender in dict.keys():
-                    list = dict.get(sender)
-                    for item in range(0, len(rnd_list)):
-                        rec = rnd_list[item][0]
-                        if (rec == None):
-                            rec = list[item][0]
-                        value = list[item][1]
-                        ave_value = (value + rnd_list[item][1])
-                        list[item] = (rec, ave_value)
+                    o_list = dict[sender]['o_lists']
+                    o_list.append(rnd_list)
+                # Else initialize a sender key with its initial o_list
                 else:
-                    dict[sender] = rnd_list
+                    dict[sender] = {'o_lists': [rnd_list], 'u_lists': []}
+        # Traverse remaining senders that didn't send message in the round and add in round list to its u list
+        for target in targets:
+            # If sender already in dictionary, simply append the current round list to its u_lists key
+            if target in dict.keys():
+                u_list = dict[target]['u_lists']
+                u_list.append(rnd_list)
+            # Else initialize a sender key with its initial u_list
+            else:
+                dict[target] = {'o_lists': [], 'u_lists': [rnd_list]}
+
     return dict
+
+def reduce_lists(dict, num_messages):
+    reduced_dict = {}
+    for key, value in dict.items():
+        O = [(None, 0)]*len(dict[key]['o_lists'][0])
+        U = [(None, 0)]*len(dict[key]['u_lists'][0])
+        O_count = len(dict[key]['o_lists'])
+        U_count = len(dict[key]['u_lists'])
+        # Traverse O lists
+        for list in range(0, len(dict[key]['o_lists'])):
+            for element in set(dict[key]['o_lists'][list]):
+                # Pull recipient from tuple
+                recipient = element[0]
+                # Pull probability from tuple
+                prob = element[1]
+                try:
+                    offset = find_offset(recipient)
+                    # Set bigO list element equivalent to the probability plus its current value
+                    O[offset] = (recipient, (O[offset][1] + prob/O_count))
+                except:
+                    continue
+        # Traverse U lists
+        for list in range(0, len(dict[key]['u_lists'])):
+            for element in set(dict[key]['u_lists'][list]):
+                # Pull recipient from tuple
+                recipient = element[0]
+                # Pull probability from tuple
+                prob = element[1]
+                try:
+                    offset = find_offset(recipient)
+                    # Set bigU list element equivalent to the probability plus its current value
+                    U[offset] = (recipient, (U[offset][1] + prob/U_count))
+                except:
+                    continue
+        behavior_vector = probability_vector(O, U, num_messages)
+        reduced_dict[key] = behavior_vector
+    return reduced_dict
+
+def probability_vector(o, u, m):
+    v = [0]*len(o)
+    for i in range(0, len(o)):
+        v[i] = (o[i][0], round((m*o[i][1] - (m-1)*u[i][1]), 2))
+    return v
 
 ########################
 # Print out users, yo. #
 ########################
 def print_dict(dict):
     for key, value in dict.items():
-        friends = sorted(set(value), key=itemgetter(1))
+        friends = sorted(value, key=itemgetter(1))
         print "{0} --> {1}".format(key, friends[-2:])
-        print ""
-
 
 if __name__ == "__main__":
     users = {}
     # Get the senders and receivers... booyah!!!
     senders, receivers = openFile(sys.argv[1])
-    users = fill_dict(senders, receivers, users)
-    print_dict(users)
-    # Print out dem bad boys
-    #for s, r in zip(senders, receivers):
-        #print ("S: ", s)
-        #print ("R: ", r)
+    dict_of_targets = fill_dict(senders, receivers, users)
+    reduced_dict = reduce_lists(dict_of_targets, len(receivers[0]))
+    print_dict(reduced_dict)
