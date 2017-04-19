@@ -6,7 +6,8 @@ import os
 import re
 from operator import itemgetter
 
-def thread_function(node,stime):
+def thread_function(node,curTime):
+    
     id = node[0:64]
     ip = node[65:77]
     port = int(node[78:])
@@ -18,10 +19,19 @@ def thread_function(node,stime):
     fname = id + ".txt"
     f = open(fname, "a")
 
+    type = ""
+    m = ""
     while True:
-        data = socket1.recv(1024).decode("utf-8").rstrip()
-        f.write(data + '\n')
-        f.flush()
+        data = socket1.recv(1).decode("utf-8")
+        if(data == '\n'):
+            if(m in ("OFFER","ACK")):
+                m = str(time.time()) + " " + m + " "
+            else:
+                f.write(m + '\n')
+                f.flush()
+                m = ""
+        else:
+            m += data
 
 
 if __name__ == "__main__":
@@ -35,11 +45,7 @@ if __name__ == "__main__":
             nodes.append(line.rstrip())
 
     curTime = time.time()
-
-    print("Hey")
-
     for node in nodes:
-        print("fork thread")
         t = threading.Thread(target=thread_function,args=(node,curTime))
         t.daemon = True
         t.start()
