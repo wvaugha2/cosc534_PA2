@@ -86,13 +86,11 @@ if __name__ == "__main__":
 
                 if(receiver == 8 and i == 0):
                     a8 += o_list[i][round][receiver]
-                    print(o_list[i][round][receiver])
                 
                 
                 sum += o_list[i][round][receiver]
             o_vector[receiver] = sum / len(o_list[i])
 #o_vector[receiver] = sum
-        print(a8/12)
 
 
         # Compute U
@@ -102,12 +100,6 @@ if __name__ == "__main__":
                 sum += u_list[i][round][receiver]
             u_vector[receiver] = sum / len(u_list[i])
 #u_vector[receiver] = sum
-
-        print("O: ",o_vector)
-        print(len(o_list[i]),'\n')
-        print("U: ",u_vector)
-        print(len(u_list[i]),'\n')
-        exit(0)
 
 
         # Update O and U
@@ -139,8 +131,8 @@ if __name__ == "__main__":
         r2 = chr(char_val) + str(int_val)
 
         print(target[i])
-        print(r1, f_vector[max1_index], max1_index)
-        print(r2, f_vector[max2_index], max2_index)
+        print(r1, f_vector[max1_index])
+        print(r2, f_vector[max2_index])
         print('')
 
 #print(o_list[0][0])
