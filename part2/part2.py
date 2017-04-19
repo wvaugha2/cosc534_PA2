@@ -37,16 +37,22 @@ def find_offset(user):
 #############################################################
 # Initialized a rnd_list dictionary                         #
 #############################################################
-def init_rnd_list():
+def init_rnd_list(t):
     d = {}
-    
-    # Obtain public nodes from nodes.txt file.
-    with open("nodes.txt") as f:
-        lines = f.readlines()
-        for line in lines[1:121]:
-            id = line[0:64]
 
-            d[id] = 0
+    # # Obtain public nodes from nodes.txt file.
+    # with open("nodes.txt") as f:
+    #     lines = f.readlines()
+    #     for line in lines[1:121]:
+    #         id = line[0:64]
+    #
+    #         d[id] = 0
+    for i in t:
+        for j in i:
+            if j in d.keys():
+                continue
+            else:
+                d[j] = 0
 
     return d
 
@@ -62,14 +68,10 @@ def fill_dict(senders, receivers, dict):
         #targets = ['8033838d7157e4931fc64e426a930ead17ec1039fd5a2e48ba7987477d018c42', '801f4c84e74280e0e7b751ae0421c284cd27b49e6cb30b3dbd766874bbd9a4e0', '801078937affd4f219223684fef36f767cdf51d5e44329a90004db8e087f8f8c', '807bad0c90c7c5fd16de41c739e24fb2ab32f3bdad6393f15b948e0620a7b840', '8063c492767fc09f29f601f35240652a375e7c9003ae92b3070cdc28077b65c9']
         targets = ['a0', 'b0', 'c0', 'd0', 'e0', 'f0', 'g0', 'h0', 'i0', 'j0', 'k0', 'l0', 'm0',
                    'n0', 'o0', 'p0', 'q0', 'r0', 's0', 't0', 'u0', 'v0', 'w0', 'x0', 'y0', 'z0']
-        
-        rnd_list = init_rnd_list()
+
+        rnd_list = init_rnd_list(receivers)
         for receiver in receivers[rnd]:
             num_messages = len(receivers[rnd])
-            # Calculate list offset for sender
-            #ro = find_offset(receiver)
-            # Don't include 1/32 probability if recipient is also sender
-            #if (ro != so):
             rnd_list[receiver] = (1/(num_messages*1.0))
         # Traverse list of senders for the current orund
         for sender in senders[rnd]:
@@ -104,10 +106,10 @@ def reduce_lists(dict, num_messages):
         U = {}
         O_count = len(dict[key]['o_lists'])
         U_count = len(dict[key]['u_lists'])
-        
+
         # Traverse O lists
         for list in range(0, len(dict[key]['o_lists'])):
-            for recipient,prob in dict[key]['o_lists'][list].items():
+            for recipient, prob in dict[key]['o_lists'][list].items():
 
                 try:
                     if recipient in O.keys():
@@ -117,11 +119,11 @@ def reduce_lists(dict, num_messages):
                 except:
                     continue
 
-    
+
         # Traverse U lists
         for list in range(0, len(dict[key]['u_lists'])):
             for recipient,prob in dict[key]['u_lists'][list].items():
-                
+
                 try:
                     if recipient in U.keys():
                         U[recipient] = U[recipient] + prob/U_count
@@ -132,21 +134,21 @@ def reduce_lists(dict, num_messages):
 
         behavior_vector = probability_vector(O, U, num_messages)
         behavior_vector = sorted(behavior_vector, key=lambda x: x[1])
-        
+
         reduced_dict[key] = behavior_vector
     return reduced_dict
 
 def probability_vector(o, u, m):
     v = [0]*len(o)
-    
+
     #for i in range(0, len(o)):
     #    v[i] = (o[i][0], round((m*o[i][1] - (m-1)*u[i][1]), 2))
-    
+
     index = 0
-    for (okey,ovalue),(ukey,uvalue) in zip(o.items(),u.items()):
-        v[index] = (okey, round((m * ovalue - (m-1)*uvalue),2))
+    for (okey,ovalue), (ukey,uvalue) in zip(o.items(),u.items()):
+        v[index] = (okey, round((m * ovalue - (m-1)*uvalue), 2))
         index += 1
-    
+
     return v
 
 ########################
