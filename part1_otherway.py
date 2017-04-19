@@ -79,18 +79,36 @@ if __name__ == "__main__":
         max2_index = 0
     
         # Compute O
+        a8 = 0
         for receiver in range(260):
             sum = 0
             for round in range(0,len(o_list[i])):
+
+                if(receiver == 8 and i == 0):
+                    a8 += o_list[i][round][receiver]
+                    print(o_list[i][round][receiver])
+                
+                
                 sum += o_list[i][round][receiver]
             o_vector[receiver] = sum / len(o_list[i])
-    
+#o_vector[receiver] = sum
+        print(a8/12)
+
+
         # Compute U
         for receiver in range(260):
             sum = 0
             for round in range(0,len(u_list[i])):
                 sum += u_list[i][round][receiver]
             u_vector[receiver] = sum / len(u_list[i])
+#u_vector[receiver] = sum
+
+        print("O: ",o_vector)
+        print(len(o_list[i]),'\n')
+        print("U: ",u_vector)
+        print(len(u_list[i]),'\n')
+        exit(0)
+
 
         # Update O and U
         for j in range(260):
