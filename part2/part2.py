@@ -69,8 +69,8 @@ def fill_dict(senders, receivers, dict):
                    #'n0', 'o0', 'p0', 'q0', 'r0', 's0', 't0', 'u0', 'v0', 'w0', 'x0', 'y0', 'z0']
 
         rnd_list = init_rnd_list(receivers)
-        for receiver in set(receivers[rnd]):
-            num_messages = len(set(receivers[rnd]))
+        for receiver in receivers[rnd]:
+            num_messages = len(receivers[rnd])
             rnd_list[receiver] = (1/(num_messages*1.0))
         # Traverse list of senders for the current orund
         for sender in senders[rnd]:
