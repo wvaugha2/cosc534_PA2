@@ -45,7 +45,6 @@ def init_rnd_list(t):
     #     lines = f.readlines()
     #     for line in lines[1:121]:
     #         id = line[0:64]
-    #
     #         d[id] = 0
     for i in t:
         for j in i:
@@ -65,13 +64,13 @@ def init_rnd_list(t):
 def fill_dict(senders, receivers, dict):
     for rnd in range(0, len(senders)):
         #targets = ['8033838d7157e4931fc64e426a930ead17ec1039fd5a2e48ba7987477d018c42']
-        #targets = ['8033838d7157e4931fc64e426a930ead17ec1039fd5a2e48ba7987477d018c42', '801f4c84e74280e0e7b751ae0421c284cd27b49e6cb30b3dbd766874bbd9a4e0', '801078937affd4f219223684fef36f767cdf51d5e44329a90004db8e087f8f8c', '807bad0c90c7c5fd16de41c739e24fb2ab32f3bdad6393f15b948e0620a7b840', '8063c492767fc09f29f601f35240652a375e7c9003ae92b3070cdc28077b65c9']
-        targets = ['a0', 'b0', 'c0', 'd0', 'e0', 'f0', 'g0', 'h0', 'i0', 'j0', 'k0', 'l0', 'm0',
-                   'n0', 'o0', 'p0', 'q0', 'r0', 's0', 't0', 'u0', 'v0', 'w0', 'x0', 'y0', 'z0']
+        targets = ['8033838d7157e4931fc64e426a930ead17ec1039fd5a2e48ba7987477d018c42', '801f4c84e74280e0e7b751ae0421c284cd27b49e6cb30b3dbd766874bbd9a4e0', '801078937affd4f219223684fef36f767cdf51d5e44329a90004db8e087f8f8c', '807bad0c90c7c5fd16de41c739e24fb2ab32f3bdad6393f15b948e0620a7b840', '8063c492767fc09f29f601f35240652a375e7c9003ae92b3070cdc28077b65c9']
+        #targets = ['a0', 'b0', 'c0', 'd0', 'e0', 'f0', 'g0', 'h0', 'i0', 'j0', 'k0', 'l0', 'm0',
+                   #'n0', 'o0', 'p0', 'q0', 'r0', 's0', 't0', 'u0', 'v0', 'w0', 'x0', 'y0', 'z0']
 
         rnd_list = init_rnd_list(receivers)
-        for receiver in receivers[rnd]:
-            num_messages = len(receivers[rnd])
+        for receiver in set(receivers[rnd]):
+            num_messages = len(set(receivers[rnd]))
             rnd_list[receiver] = (1/(num_messages*1.0))
         # Traverse list of senders for the current orund
         for sender in senders[rnd]:
