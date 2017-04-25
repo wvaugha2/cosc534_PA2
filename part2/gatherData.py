@@ -1,3 +1,12 @@
+# Program Description
+
+# Put this program into the directory in which you wish to pull rounds.
+# This program will create 120 files, one for each public node - given
+# the name of the node appended with '.txt', and write all round
+# information for that node to the file.
+#
+# This program will run for exactly 10 hours.
+
 import socket
 import threading
 import time
