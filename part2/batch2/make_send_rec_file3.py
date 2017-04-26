@@ -172,7 +172,7 @@ if __name__ == "__main__":
                                 if (firstFile == True):
                                     public_rounds[round][1][items[2]] = (float(items[0]), id)
                     
-                        # Private OFFER messages
+                        # Private ACK messages
                         else:
                             if items[2] in private_rounds[round][1].keys():
                                 list = private_rounds[round][1][items[2]]
@@ -198,21 +198,61 @@ if __name__ == "__main__":
                         
                     
                         ack += 1
-                prev = "ACK"
-        
+                        prev = "ACK"
         
             firstFile = False
-                
+
     for round in range(len(private_rounds)):
+        print("Round: ",round, " --> ")
     
         s = []
-        x = 0
+        
         for message in private_rounds[round][0]:
-            print("Round: ",round, " --> ")
-            
+            print("  Message: ",message)
             list = private_rounds[round][0][message]
+            
+            people = []
             for e in list:
-                print(e)
+                people.append(e[1])
+
+            #Search for a match with a private node.
+            found = False
+            for key,value in priv_nodes.items():
+                ret = set(value) & set(people)
+                #print(len(ret))
+                if(len(ret) == 8):
+                    s.append(key)
+                    found = True
+                    break
+
+            if(found == True):
+                print("OFFER", message, " --> ", s[-1])
+            else:
+                print("OFFER", message, " No match found")
+
+        r = []
+        for message in private_rounds[round][1]:
+            print("  Message: ",message)
+            list = private_rounds[round][1][message]
+            
+            people = []
+            for e in list:
+                people.append(e[1])
+            
+            #Search for a match with a private node.
+            found = False
+            for key,value in priv_nodes.items():
+                ret = set(value) & set(people)
+                #print(len(ret))
+                if(len(ret) == 8):
+                    r.append(key)
+                    found = True
+                    break
+        
+            if(found == True):
+                print("ACK", message, " --> ", r[-1])
+            else:
+                print("ACK", message, " No match found")
 
     exit()
 
