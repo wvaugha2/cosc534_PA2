@@ -59,6 +59,6 @@ if __name__ == "__main__":
         t.daemon = True
         t.start()
 
-    while time.time() - curTime < 36000:
+    while time.time() - curTime < 21600:
         curTime = curTime
 
