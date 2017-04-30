@@ -8,6 +8,10 @@ Ty Vaughan
 
 Answers
 
+	Our answers are for the nodes given by running bootstrap.jar.  The 
+	output from running bootstrap.jar with our team name as input can
+	be found in the file bootstrap.txt.
+
 	The answers to this assignment for each part are given in the 
 	following csv files:
 		Part1  ->  PART1_ANSWERS.csv
