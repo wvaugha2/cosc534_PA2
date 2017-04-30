@@ -63,8 +63,11 @@ def init_rnd_list(t):
 ###########################################################################
 def fill_dict(senders, receivers, dict):
     for rnd in range(0, len(senders)):
-
-        targets = ['a0', 'b0', 'c0', 'd0', 'e0', 'f0', 'g0', 'h0', 'i0', 'j0', 'k0', 'l0', 'm0', 'n0', 'o0', 'p0', 'q0', 'r0', 's0', 't0', 'u0', 'v0', 'w0', 'x0', 'y0', 'z0']
+        targets = ['80c36eb1372ba2de9c3222748b9c2d5d0f59924a5f87da7e270c25758ae6da87',
+                   '80294dd94243cfec921c56685040765ffccdcd89677e7040e16733ff645c7a0c',
+                   '806ca14119a98ecf4160e8e4c4c0f49d6feae0b21076bd412b93e0ef9263caf9',
+                   '80c0435f7fed4d24fb9bbf5915973a7d3cdec68f8ee66e935965238433c2cd45',
+                   '804a74fecca6aabed86b2642ca5ddf91d03d1943a89c487a91a21bace9757ad3']
 
         rnd_list = init_rnd_list(receivers)
         for receiver in receivers[rnd]:
@@ -152,7 +155,7 @@ def probability_vector(o, u, m):
 # Print out users, yo. #
 ########################
 def print_dict(dict):
-    for key, value in sorted(dict.items(), key=lambda x: x[0]):
+    for key, value in dict.items():
         friends = sorted(value, key=itemgetter(1))
         print "{0} --> {1}".format(key, friends[-2:])
 
